@@ -38,7 +38,6 @@ class List extends Component {
   render() {
     console.log(this.state)
     return (
-
       <Container>
         <FullList
           name={this.state.result[0]}
