@@ -1,51 +1,47 @@
-import React, { Component } from "react";
-import Container from "./Container";
-import SearchForm from "./SearchForm";
-import API from "../utils/API";
-import FullList from "./FullList";
+import React, { Component, useEffect } from "react";
 
-class List extends Component {
-  state = {
-    result: {},
-    search: ""
-  };
+import Filter from "./Filter";
 
-  // When this component mounts, search for the movie "The Matrix"
-  componentDidMount() {
-    this.searchMovies();
-  }
+import { useState, UseEffect } from "react";
 
-  searchMovies = query => {
-    API.search(query)
-      .then(res => this.setState({ result: res.data}))
-      .catch(err => console.log(err));
-  };
+function List() {
+  const [users, setUsers] = useState([])
+  useEffect(() => {
 
-  handleInputChange = event => {
-    const value = event.target.value;
-    const name = event.target.name;
-    this.setState({
-      [name]: value
-    });
-  };
+    fetch('https://randomuser.me/api/?results=100')
+      .then((data => data.json()))
+      .then((data => setUsers(data.results)))
+  }, [])
 
-  // When the form is submitted, search the OMDB API for the value of `this.state.search`
-  handleFormSubmit = event => {
-    event.preventDefault();
-    this.searchMovies(this.state.search);
-  };
+  function Male() {
+    useState(() => {
+      fetch('https://randomuser.me/api/?results=5')
+      .then((data => data.json()))
+      .then((data => setUsers(data.results))) 
+    })
 
-  render() {
-    console.log(this.state)
     return (
-      <Container>
-        <FullList
-          name={this.state.result[0]}
-        />
-        <SearchForm />
-      </Container>
-    );
+      <div>
+      <Filter></Filter>
+      {users.map((each, index) => {
+			return(
+				<p key={index}>{each.name.first} {each.name.last}</p>
+			)
+		})}
+    </div>
+    )
   }
-}
 
+  return (
+    <div>
+      <Filter></Filter>
+      {users.map((each, index) => {
+			return(
+				<p key={index}>{each.name.first} {each.name.last}</p>
+			)
+		})}
+    </div>
+  )
+}
+  
 export default List;
